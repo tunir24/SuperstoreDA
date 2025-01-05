@@ -1,0 +1,54 @@
+
+/*Total No Of Orders*/
+select count("Row ID") as "Number of Orders" from Sales;
+
+/*Total Sales */
+select round(sum(Sales),2) as "Total Sales" from Sales;
+
+/*Total Profit */
+select round(sum(Profit),2) as "Total Profit" from Sales;
+
+/*Categories wise Quantity Ordered */
+select Category,sum(Quantity) as "Quantity" from Sales group by Category order by Quantity ;
+
+/*Categories Wise Sales*/
+select Category,sum(Sales) as "Sale" from Sales group by Category order by Sale desc;
+
+/*Top 5 profitable Segments */
+select "sub-Category",sum(Profit) as "Profit" from Sales group by "Sub-Category" order by Profit desc limit 5;
+
+/*Top 5 Loss & Less profitable Segments */
+select "sub-Category",sum(Profit) as "Profit" from Sales group by "Sub-Category" order by Profit asc limit 5;
+
+/* Regionwise Profit */
+select Region,sum(Profit) as "Profit" from Sales group by Region order by Profit desc
+
+/* Regionwise Sales */
+select Region,sum(Sales) as "Sale" from Sales group by Region order by Sale desc;
+
+/* CategoryWise Discount */
+select Category,round(avg(Discount),2) as "Discount" from Sales group by Category;
+
+/*Most Orders by customers */
+select "Customer Name",count("Customer ID") as "Orders Count" from Sales group by "Customer Name" order by "Orders Count" desc limit 3;
+
+/*Segments Wise Sales */
+select Segment,sum(Sales) as "Sale" from Sales group by Segment order by Sale desc;
+
+/* Orders Count by Shipping Mode */
+select "Ship Mode",count("OrderID") as "Number of Orders" from Sales group by "Ship Mode" order by "Number of Orders"desc;
+
+/*Rush Quarter */
+WITH QuarterCTE AS (
+    SELECT 
+        "OrderID", 
+        "Order Date",
+        CASE 
+            WHEN MONTH("Order Date") IN (1, 2, 3, 4) THEN '1st Quarter'
+            WHEN MONTH("Order Date") IN (5, 6, 7,8) THEN '2nd Quarter'
+            WHEN MONTH("Order Date") IN ( 9, 10,11,12) THEN '3rd Quarter'
+        END AS Quarter
+    FROM Sales
+)
+SELECT Quarter,count(OrderID) as "Count" FROM QuarterCTE group by Quarter Order by Count;
+
